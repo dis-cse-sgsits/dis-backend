@@ -32,17 +32,10 @@ public class NotificationServiceImpl implements NotificationService {
      * The Notification participant repository.
      */
     private final NotificationParticipantRepository notificationParticipantRepository;
-
     /**
      * The User repository.
      */
     private final UserRepository userRepository;
-
-    /**
-     * The Template.
-     */
-    private final SimpMessagingTemplate template;
-
     /**
      * The constant notificationBucket.
      */
@@ -55,17 +48,14 @@ public class NotificationServiceImpl implements NotificationService {
      * @param notificationRepository            the notification repository
      * @param notificationParticipantRepository the notification participant repository
      * @param userRepository                    the user repository
-     * @param template                          the template
      */
     @Autowired
     public NotificationServiceImpl(@Qualifier("notificationServiceRepository") NotificationRepository notificationRepository,
                                    @Qualifier("notificationParticipantRepository") NotificationParticipantRepository notificationParticipantRepository,
-                                   @Qualifier("userServiceRepository") UserRepository userRepository,
-                                   SimpMessagingTemplate template) {
+                                   @Qualifier("userServiceRepository") UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.notificationParticipantRepository = notificationParticipantRepository;
         this.userRepository = userRepository;
-        this.template = template;
     }
 
     @Override
@@ -82,7 +72,6 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendNotificationToAll(final Notification notification) {
         final Notification savedNotification = notificationRepository.save(notification);
         userRepository.getAllUsers().forEach(user -> saveParticipant(savedNotification, user));
-        //sendToAllWebsocket(savedNotification);
     }
 
     @Override
@@ -90,7 +79,6 @@ public class NotificationServiceImpl implements NotificationService {
         final Notification savedNotification = notificationRepository.save(notification);
         final List<User> participants = userRepository.findAllByUsernameIn(usernameList);
         participants.forEach(participant -> saveParticipant(savedNotification, participant));
-        //sendToUserWebsocket(savedNotification, participants);
     }
 
     @Override
@@ -98,7 +86,6 @@ public class NotificationServiceImpl implements NotificationService {
         final Notification savedNotification = notificationRepository.save(notification);
         final List<User> participants = userRepository.findAllByUserTypeInAndUsernameNotIn(typeList, usernameList);
         participants.forEach(participant -> saveParticipant(savedNotification, participant));
-        //sendToUserWebsocket(savedNotification, participants);
     }
 
     @Override
@@ -121,32 +108,14 @@ public class NotificationServiceImpl implements NotificationService {
                 .orElseThrow(EntityNotFoundException::new);
         notificationParticipantRepository.modifyReadStatusOfAll(user.getId(), true);
     }
-    
 
-//    /**
-//     * Send to all websocket notification.
-//     *
-//     * @param notification the notification
-//     * @return the notification
-//     */
-//    @SendTo("${dis.notification.notificationBucket}")
-//    private Notification sendToAllWebsocket(Notification notification) {
-//        // TODO: 30-04-2020 Check if the annotation actually sends the notification to the websocket
-//        return notification;
-//    }
-//
-//    /**
-//     * Send to user websocket notification.
-//     *
-//     * @param notification    the notification
-//     * @param participantList the participant list
-//     * @return the notification
-//     */
-//    private void sendToUserWebsocket(Notification notification, List<User> participantList) {
-//        // TODO: 01-05-2020 Write logic to multicast, check if return type will be void or not
-//        participantList.forEach(participant -> template.convertAndSendToUser(participant.getUsername(),
-//                notificationBucket, notification));
-//    }
+    @Override
+    public void forwardNotification(String notificationId, List<String> usernameList, String comment) {
+        final Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(EntityNotFoundException::new);
+        final List<User> participants = userRepository.findAllByUsernameIn(usernameList);
+        participants.forEach(participant -> saveParticipant(notification, participant, comment));
+    }
 
     /**
      * Persist notification.
@@ -154,11 +123,27 @@ public class NotificationServiceImpl implements NotificationService {
      * @param notification the notification
      * @param participant  the participant
      */
-    private void saveParticipant(Notification notification, User participant) {
+    private void saveParticipant(final Notification notification, final User participant) {
         final NotificationParticipant participation = new NotificationParticipant();
         participation.setNotification(notification);
         participation.setUser(participant);
         participation.setReadStatus(false);
+        notificationParticipantRepository.save(participation);
+    }
+
+    /**
+     * Save participant.
+     *
+     * @param notification the notification
+     * @param participant  the participant
+     * @param comment      the comment
+     */
+    private void saveParticipant(final Notification notification, final User participant, final String comment) {
+        final NotificationParticipant participation = new NotificationParticipant();
+        participation.setNotification(notification);
+        participation.setUser(participant);
+        participation.setReadStatus(false);
+        participation.setComment(comment);
         notificationParticipantRepository.save(participation);
     }
 
@@ -174,6 +159,7 @@ public class NotificationServiceImpl implements NotificationService {
                 participant.getNotification().getDescription(),
                 participant.getNotification().getLink(),
                 participant.getReadStatus(),
-        		participant.getNotification().getCreatedDate());
+        		participant.getNotification().getCreatedDate(),
+                participant.getComment());
     }
 }

@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.rmi.UnknownHostException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.user.controller.EmailController;
-import sgsits.cse.dis.user.controller.UserNotificationController;
 import sgsits.cse.dis.user.dtos.EventDto;
 import sgsits.cse.dis.user.exception.EventDoesNotExistException;
 import sgsits.cse.dis.user.model.*;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import sgsits.cse.dis.user.dto.ForwardNotificationDto;
 import sgsits.cse.dis.user.dto.NotificationDto;
 import sgsits.cse.dis.user.dto.SendNotificationRequestDto;
 import sgsits.cse.dis.user.jwt.JwtResolver;
@@ -18,11 +19,11 @@ import java.util.List;
 /**
  * The type User notification controller.
  */
-@Api(value = "User Notification Controller")
+@Api(value = "Notification Controller")
 @RestController
 @Controller
 @RequestMapping(path = "/userNotificationController")
-public class UserNotificationController {
+public class NotificationController {
 
     /**
      * The Notification service.
@@ -32,7 +33,7 @@ public class UserNotificationController {
     /**
      * The constant LOG.
      */
-    public static Logger LOG = LoggerFactory.getLogger(UserNotificationController.class);
+    public static Logger LOG = LoggerFactory.getLogger(NotificationController.class);
 
     /**
      * Instantiates a new User notification controller.
@@ -40,20 +41,9 @@ public class UserNotificationController {
      * @param notificationService the notification service
      */
     @Autowired
-    public UserNotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
-
-//    /**
-//     * Gets all notifications.
-//     *
-//     * @param username the username
-//     * @return the all notifications
-//     */
-//    @GetMapping(value = "/getAllNotification/{username}")
-//    public List<NotificationDto> getAllNotifications(@PathVariable("username") final String username) {
-//        return notificationService.getAllNotification(username);
-//    }
 
     /**
      * Gets user name.
@@ -62,8 +52,8 @@ public class UserNotificationController {
      * @return the user name
      */
     @GetMapping(value = "/getAllNotifications")
-    public List<NotificationDto> getUserName(@RequestHeader("Authorization") final String authHeader) { //HttpServletRequest request) {
-        final String username = JwtResolver.getUsernameFromAuthHead(authHeader);//request.getHeader("Authorization"));
+    public List<NotificationDto> getUserName(@RequestHeader("Authorization") final String authHeader) {
+        final String username = JwtResolver.getUsernameFromAuthHead(authHeader);
         return notificationService.getAllNotification(username);
     }
 
@@ -74,7 +64,8 @@ public class UserNotificationController {
      * @param authHeader     the auth header
      */
     @GetMapping(value = "/markAsRead/{notificationId}")
-    public void markAsRead(@PathVariable("notificationId") final String notificationId, @RequestHeader("Authorization") final String authHeader) {
+    public void markAsRead(@PathVariable("notificationId") final String notificationId,
+                           @RequestHeader("Authorization") final String authHeader) {
         final String username = JwtResolver.getUsernameFromAuthHead(authHeader);
         notificationService.markAsRead(notificationId, username);
     }
@@ -132,5 +123,16 @@ public class UserNotificationController {
     public void sendNotificationByType(@RequestBody final SendNotificationRequestDto notificationRequest) {
         notificationService.sendNotificationByType(notificationRequest.getNotification(),
                 notificationRequest.getTypeList());
+    }
+
+    /**
+     * Forward notification.
+     *
+     * @param forwardRequest the forward request
+     */
+    @PostMapping(value = "/forwardNotification")
+    public void forwardNotification(@RequestBody final ForwardNotificationDto forwardRequest) {
+        notificationService.forwardNotification(forwardRequest.getNotificationId(),
+                forwardRequest.getUsernameList(), forwardRequest.getComment());
     }
 }

@@ -11,6 +11,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "notification_participant")
 public class NotificationParticipant extends AuditInformation {
 
+  /**
+   * The Id.
+   */
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(
@@ -19,12 +22,26 @@ public class NotificationParticipant extends AuditInformation {
   )
   @Column(name = "id", nullable = false, unique = true)
   private String id;
+  /**
+   * The Notification.
+   */
   @ManyToOne
   private Notification notification;
+  /**
+   * The User.
+   */
   @ManyToOne
   private User user;
+  /**
+   * The Read status.
+   */
   @Column(name = "read_status")
   private Boolean readStatus;
+  /**
+   * The Comment.
+   */
+  @Column(name = "comment")
+  private String comment;
 
   /**
    * Gets id.
@@ -97,4 +114,23 @@ public class NotificationParticipant extends AuditInformation {
   public void setReadStatus(final Boolean readStatus) {
     this.readStatus = readStatus;
   }
+
+  /**
+   * Gets comment.
+   *
+   * @return the comment
+   */
+  public String getComment() {
+    return comment;
+  }
+
+  /**
+   * Sets comment.
+   *
+   * @param comment the comment
+   */
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
 }

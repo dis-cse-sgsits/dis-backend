@@ -2,6 +2,7 @@ package sgsits.cse.dis.user.model;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -35,13 +36,18 @@ public class NotificationParticipant extends AuditInformation {
   /**
    * The Read status.
    */
-  @Column(name = "read_status")
+  @Column(name = "read_status", nullable = false)
   private Boolean readStatus;
   /**
    * The Comment.
    */
   @Column(name = "comment")
   private String comment;
+  /**
+   * The Is active.
+   */
+  @Column(name = "is_active", nullable = false)
+  private Boolean isActive = true;
 
   /**
    * Gets id.
@@ -131,6 +137,24 @@ public class NotificationParticipant extends AuditInformation {
    */
   public void setComment(String comment) {
     this.comment = comment;
+  }
+
+  /**
+   * Gets active.
+   *
+   * @return the active
+   */
+  public Boolean getActive() {
+    return isActive;
+  }
+
+  /**
+   * Sets active.
+   *
+   * @param active the active
+   */
+  public void setActive(Boolean active) {
+    isActive = active;
   }
 
 }

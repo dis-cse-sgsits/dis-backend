@@ -22,7 +22,7 @@ public interface NotificationParticipantRepository extends JpaRepository<Notific
      * @param user the user
      * @return the list
      */
-    List<NotificationParticipant> findAllByUser(User user);
+    List<NotificationParticipant> findAllByUserAndIsActive(final User user, final Boolean status);
 
     @Transactional
     @Modifying

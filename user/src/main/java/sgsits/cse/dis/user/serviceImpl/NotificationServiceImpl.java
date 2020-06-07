@@ -62,7 +62,7 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDto> getAllNotification(final String username) throws EntityNotFoundException {
         final User user = userRepository.findByUsername(username)
                 .orElseThrow(EntityNotFoundException::new);
-        return notificationParticipantRepository.findAllByUser(user)
+        return notificationParticipantRepository.findAllByUserAndIsActive(user, true)
                 .stream()
                 .map(this::notificationDtoMapper)
                 .collect(Collectors.toList());

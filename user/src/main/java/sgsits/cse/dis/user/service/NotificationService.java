@@ -76,4 +76,22 @@ public interface NotificationService {
      * @param comment        the comment
      */
     void forwardNotification(final String notificationId, final List<String> usernameList, final String comment);
+    
+    /**
+     * Delete notification.
+     * 
+     * @param notificationId
+     * @param username
+     */
+    void deleteNotification(final String notificationId, final String username);
+    
+    /**
+     * Mark as favourite.
+     * 
+     * @param notificationId
+     * @param username
+     */
+    void markAsFavourite(final String notificationId, final String username);
+    
+    
 }

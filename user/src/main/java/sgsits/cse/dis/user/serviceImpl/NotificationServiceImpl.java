@@ -116,6 +116,20 @@ public class NotificationServiceImpl implements NotificationService {
         final List<User> participants = userRepository.findAllByUsernameIn(usernameList);
         participants.forEach(participant -> saveParticipant(notification, participant, comment));
     }
+    
+    @Override
+    public void deleteNotification(final String notificationId, final String username) {
+        final User user = userRepository.findByUsername(username)
+                .orElseThrow(EntityNotFoundException::new);
+        notificationParticipantRepository.modifyIsActive(notificationId, user.getId(), false);
+    }
+    
+    @Override
+    public void markAsFavourite(final String notificationId, final String username) {
+        final User user = userRepository.findByUsername(username)
+                .orElseThrow(EntityNotFoundException::new);
+        notificationParticipantRepository.modifyFavouriteStatus(notificationId, user.getId(), true);
+    }
 
     /**
      * Persist notification.
@@ -160,6 +174,10 @@ public class NotificationServiceImpl implements NotificationService {
                 participant.getNotification().getLink(),
                 participant.getReadStatus(),
         		participant.getNotification().getCreatedDate(),
-                participant.getComment());
+                participant.getComment(),
+        		participant.getActive(),
+        		participant.getFavourite());
+        		
+        		
     }
 }

@@ -36,7 +36,7 @@ public class NotificationParticipant extends AuditInformation {
   /**
    * The Read status.
    */
-  @Column(name = "read_status", nullable = false)
+  @Column(name = "read_status", columnDefinition = "boolean default false",nullable = false)
   private Boolean readStatus;
   /**
    * The Comment.
@@ -46,10 +46,16 @@ public class NotificationParticipant extends AuditInformation {
   /**
    * The Is active.
    */
-  @Column(name = "is_active", nullable = false)
+  @Column(name = "is_active", columnDefinition = "boolean default true",nullable = false)
   private Boolean isActive = true;
-
   /**
+   * The Is favourite.
+   */
+  @Column(name = "is_favourite",columnDefinition = "boolean default false", nullable = false)
+  private Boolean isFavourite = false;
+
+
+/**
    * Gets id.
    *
    * @return the id
@@ -156,5 +162,23 @@ public class NotificationParticipant extends AuditInformation {
   public void setActive(Boolean active) {
     isActive = active;
   }
+  
+  /**
+   * Gets favourite.
+   *
+   * @return the favourite
+   */
+  public Boolean getFavourite() {
+		return isFavourite;
+	}
+
+  /**
+   * Sets favourite.
+   *
+   * @param favourite the favourite
+   */
+	public void setFavourite(Boolean favourite) {
+		this.isFavourite = favourite;
+	}
 
 }

@@ -46,7 +46,7 @@ public class NotificationController {
     }
 
     /**
-     * Gets user name.
+     * Gets all notifications.
      *
      * @param authHeader the auth header
      * @return the user name
@@ -135,4 +135,34 @@ public class NotificationController {
         notificationService.forwardNotification(forwardRequest.getNotificationId(),
                 forwardRequest.getUsernameList(), forwardRequest.getComment());
     }
+    
+
+    /**
+     * 
+     * Delete notification.
+     * 
+     * @param notificationId
+     * @param authHeader
+     */
+    @GetMapping(value = "/deleteNotification/{notificationId}")
+    public void deleteNotification(@PathVariable("notificationId") final String notificationId,@RequestHeader("Authorization") final String authHeader) {
+        final String username = JwtResolver.getUsernameFromAuthHead(authHeader);
+        notificationService.deleteNotification(notificationId, username);
+    }
+    
+    
+    /**
+     * Mark as favourite.
+     * 
+     * @param notificationId
+     * @param authHeader
+     */
+    @GetMapping(value = "/markAsFavourite/{notificationId}")
+    public void markAsFavourite(@PathVariable("notificationId") final String notificationId,@RequestHeader("Authorization") final String authHeader) {
+        final String username = JwtResolver.getUsernameFromAuthHead(authHeader);
+        notificationService.markAsFavourite(notificationId, username);
+    }
 }
+    
+    
+    

@@ -175,7 +175,6 @@ public class NotificationServiceImpl implements NotificationService {
                 participant.getReadStatus(),
         		participant.getNotification().getCreatedDate(),
                 participant.getComment(),
-        		participant.getActive(),
         		participant.getFavourite());
         		
         		

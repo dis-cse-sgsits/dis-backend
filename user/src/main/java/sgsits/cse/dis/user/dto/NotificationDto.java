@@ -37,11 +37,6 @@ public class NotificationDto {
     private String comment;
     
     /**
-     * The Is active
-     */
-    private Boolean isActive;
-    
-    /**
      * The Is favourite
      */
     private Boolean isFavourite;
@@ -63,12 +58,11 @@ public class NotificationDto {
      * @param isRead      the is read
      * @param date        the date
      * @param comment     the comment
-     * @param isActive    the is active
      * @param isFavourite the is favourite
      */
     public NotificationDto(final String id, final String heading, final String description,
                            final String link, Boolean isRead, final Date date, final String comment,
-                           Boolean isActive,Boolean isFavourite) {
+                           Boolean isFavourite) {
         this.id = id;
         this.heading = heading;
         this.description = description;
@@ -76,7 +70,6 @@ public class NotificationDto {
         this.isRead = isRead;
         this.date = date;
         this.comment = comment;
-        this.isActive = isActive;
         this.isFavourite = isFavourite;
     }
 
@@ -205,14 +198,6 @@ public class NotificationDto {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean active) {
-		this.isActive = active;
-	}
 
 	public Boolean getIsFavourite() {
 		return isFavourite;

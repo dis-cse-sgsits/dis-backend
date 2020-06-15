@@ -128,7 +128,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void markAsFavourite(final String notificationId, final String username) {
         final User user = userRepository.findByUsername(username)
                 .orElseThrow(EntityNotFoundException::new);
-        notificationParticipantRepository.modifyFavouriteStatus(notificationId, user.getId(), true);
+        notificationParticipantRepository.modifyFavouriteStatus(notificationId, user.getId());
     }
 
     /**

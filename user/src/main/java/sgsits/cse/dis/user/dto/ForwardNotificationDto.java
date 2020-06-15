@@ -19,6 +19,12 @@ public class ForwardNotificationDto {
 	 * The Comment.
 	 */
 	private String comment;
+	
+	/**
+    * Instantiates a new Send notification request dto.
+    */
+    public ForwardNotificationDto() {
+    }
 
 	/**
 	 * Instantiates a new Forward notification dto.

@@ -41,8 +41,7 @@ public interface NotificationParticipantRepository extends JpaRepository<Notific
   
     @Transactional
     @Modifying
-    @Query("update NotificationParticipant n set n.isFavourite = :isFavourite where n.notification.id = :notificationId and n.user.id = :userId")
-    void modifyFavouriteStatus(@Param("notificationId") final String notificationId, @Param("userId") final String userId, @Param("isFavourite") final boolean status);
-
+    @Query("update NotificationParticipant n set n.isFavourite = case n.isFavourite WHEN TRUE THEN FALSE ELSE TRUE END where n.notification.id = :notificationId and n.user.id = :userId")
+    void modifyFavouriteStatus(@Param("notificationId") final String notificationId, @Param("userId") final String userId);
     
 }

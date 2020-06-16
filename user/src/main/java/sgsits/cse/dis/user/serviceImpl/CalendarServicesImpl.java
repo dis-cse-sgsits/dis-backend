@@ -20,6 +20,7 @@ import sgsits.cse.dis.user.service.CalendarServices;
 import sgsits.cse.dis.user.service.NotificationService;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 @Service
 public class CalendarServicesImpl implements CalendarServices {
@@ -141,6 +142,26 @@ public class CalendarServicesImpl implements CalendarServices {
 	@Override
 	public List<Group> getMyGroups(String username) {
 		return groupRepository.findByCreatedBy(username);
+	}
+
+	@Override
+	@Transactional
+	public void deleteGroup(String groupId) {
+		if(!groupId.isEmpty())
+			groupRepository.removeByGroupId(groupId);
+	}
+
+	@Override
+	public Group updateGroup(String groupId, Group group) {
+		if(groupId!=null){
+			Group groupInDb = groupRepository.findByGroupId(groupId);
+			groupInDb.setGroupName(group.getGroupName());
+			groupInDb.setParticipants(group.getParticipants());
+			groupInDb.setModifiedBy(group.getModifiedBy());
+			groupInDb.setModifiedDate(group.getModifiedDate());
+			groupRepository.save(groupInDb);
+		}
+		return group;
 	}
 
 

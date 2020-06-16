@@ -1,11 +1,10 @@
 package sgsits.cse.dis.user.model;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
-@Table(name = "first_year_be_student")
-public class FirstYearBeStudent extends StudentInformation{
+@Table(name = "fourth_year_be_student")
+public class FourthYearBeStudent extends StudentInformation{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)

@@ -29,4 +29,6 @@ public interface CalendarServices {
 	List<Holiday> getPublicHolidays();
 	Group addGroup(Group group);
 	List<Group> getMyGroups(String username);
+	void deleteGroup(String groupId);
+	Group updateGroup(String groupId,Group group);
 }

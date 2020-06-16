@@ -94,7 +94,7 @@ public class StudentProfile {
 		this.id = id;
 	}
 
-	public String getCreategdBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 

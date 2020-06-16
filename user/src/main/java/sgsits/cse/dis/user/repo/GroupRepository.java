@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, String> {
     List<Group> findByCreatedBy(String username);
+    void removeByGroupId(String groupId);
+    Group findByGroupId(String groupId);
 }

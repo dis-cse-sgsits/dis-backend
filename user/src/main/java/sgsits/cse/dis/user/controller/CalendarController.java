@@ -29,8 +29,6 @@ public class CalendarController {
 
 	@Autowired
 	private CalendarServicesImpl calenderServiceImpl;
-		
-	private List<Event> eventList;
 
 	@ApiOperation(value="Get all the events", response= Event.class, httpMethod = "GET", produces="application/json")
 	@GetMapping(path = "/getAllEvents", produces = "application/json")
@@ -78,16 +76,29 @@ public class CalendarController {
 		return calenderServiceImpl.updateEvent(event,eventId, files);
 	}
 
-	@ApiOperation(value="Adding a group", response= Event.class, httpMethod = "POST", produces="application/json")
+	@ApiOperation(value="Adding a group", response= Group.class, httpMethod = "POST", produces="application/json")
 	@PostMapping(path = "/addGroup", produces = "application/json")
 	public Group addGroup(@RequestBody Group group){
 		calenderServiceImpl.addGroup(group);
 		return group;
 	}
 
-	@ApiOperation(value="Get all my groups", response= Event.class, httpMethod = "GET", produces="application/json")
+	@ApiOperation(value="Get all my groups", response= Group.class, httpMethod = "GET", produces="application/json")
 	@PostMapping(path = "/getMyGroup", produces = "application/json")
-	public List<Group> getMyGroup(@RequestParam(value="userName") String userName){
+	public List<Group> getMyGroup(@RequestParam(value="username") String userName){
 		return calenderServiceImpl.getMyGroups(userName);
 	}
+
+	@ApiOperation(value="Delete group", response= Group.class, httpMethod = "DELETE", produces="application/json")
+	@PostMapping(path = "/deleteGroup", produces = "application/json")
+	public void deleteGroup(@RequestParam(value="groupId") String groupId){
+		calenderServiceImpl.deleteGroup(groupId);
+	}
+
+	@ApiOperation(value="Update a group", response= Group.class, httpMethod = "POST", produces="application/json")
+	@PostMapping(path = "/updateGroup", produces = "application/json")
+	public Group updateGroup(@RequestParam(value="groupId") String groupId,@RequestBody Group group){
+		return calenderServiceImpl.updateGroup(groupId,group);
+	}
+
 }

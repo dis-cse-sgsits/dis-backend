@@ -33,7 +33,7 @@ public interface StaffBasicProfileRepository extends JpaRepository<StaffBasicPro
 	String findNameByUsername(String username);
 
 	@Query(value = "SELECT user.username, staff_basic_profile.name  FROM staff_basic_profile, user where staff_basic_profile.user_id=user.id", nativeQuery = true)
-	List<Object[]> findAllUserIdAndUsername();
+	List<Object> findAllUserIdAndUsername();
 
 	@Query(value = "SELECT user.username, staff_basic_profile.email  FROM staff_basic_profile, user where staff_basic_profile.user_id=user.id", nativeQuery = true)
 	List<Object[]> findAllUserIdAndEmails();

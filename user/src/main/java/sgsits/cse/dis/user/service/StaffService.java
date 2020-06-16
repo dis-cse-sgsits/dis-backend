@@ -28,7 +28,7 @@ public interface StaffService {
 
 	void updateUserIdByEmail(String userId,String email);
 
-	List<Object[]> getAllEmployeeNamesAndUserId();
+	List<Object> getAllEmployeeNamesAndUserId();
 
 	List<Object[]> getAllUsernameAndEmail();
 }

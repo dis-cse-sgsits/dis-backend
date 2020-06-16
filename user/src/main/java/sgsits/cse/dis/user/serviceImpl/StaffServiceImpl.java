@@ -81,7 +81,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<Object[]> getAllEmployeeNamesAndUserId() {
+    public List<Object> getAllEmployeeNamesAndUserId() {
         return staffBasicProfileRepository.findAllUserIdAndUsername();
     }
 

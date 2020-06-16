@@ -80,7 +80,7 @@ public class StaffController {
 
 	@ApiOperation(value="get list of all employees", response = ResponseMessage.class, httpMethod = "GET", produces = "text/plain")
 	@GetMapping(path=RestAPI.GET_ALL_USER_ID_AND_NAMES, produces = "application/json")
-	public ResponseEntity<List<Object[]>> getAllUserIdAndNames() throws NotFoundException {
+	public ResponseEntity<List<Object>> getAllUserIdAndNames() throws NotFoundException {
 
 		return new ResponseEntity<>(staffServiceImpl.getAllEmployeeNamesAndUserId(), HttpStatus.OK);
 	}

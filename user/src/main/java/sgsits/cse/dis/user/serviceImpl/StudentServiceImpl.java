@@ -1,17 +1,22 @@
 package sgsits.cse.dis.user.serviceImpl;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sgsits.cse.dis.user.components.StudentProfileRepo;
 import sgsits.cse.dis.user.dtos.*;
 import sgsits.cse.dis.user.exception.InternalServerError;
 import sgsits.cse.dis.user.mappers.StudentServiceMapper;
+import sgsits.cse.dis.user.repo.StudentRepository;
 import sgsits.cse.dis.user.service.StudentService;
 
 import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    @Autowired
+    StudentRepository studentRepository;
 
     private final StudentProfileRepo studentProfileRepo;
 
@@ -38,6 +43,11 @@ public class StudentServiceImpl implements StudentService {
 
         studentProfileRepo.addOrUpdateStudentProfile(
                 studentServiceMapper.convertStudentBasicProfileDtoIntoModel(studentBasicProfileDto));
+    }
+
+    @Override
+    public List<Object> findDetailsForGroup() {
+        return studentRepository.findEnrollmentIdAndFullNameAndUserIdAndCourseId();
     }
 
 

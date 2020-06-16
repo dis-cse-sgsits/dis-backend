@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.user.controller.EmailController;
 import sgsits.cse.dis.user.controller.UserNotificationController;
 import sgsits.cse.dis.user.dtos.EventDto;
+import sgsits.cse.dis.user.dtos.ParticipantDto;
 import sgsits.cse.dis.user.exception.EventDoesNotExistException;
 import sgsits.cse.dis.user.model.*;
 import sgsits.cse.dis.user.repo.*;
@@ -26,6 +27,9 @@ import javax.transaction.Transactional;
 public class CalendarServicesImpl implements CalendarServices {
 
 	@Autowired
+	StudentServiceImpl studentServiceImpl;
+
+	@Autowired
 	private EventRepository eventRepository;
 
 	@Autowired
@@ -36,6 +40,9 @@ public class CalendarServicesImpl implements CalendarServices {
 
 	@Autowired
 	private StaffBasicProfileRepository staffBasicProfileRepository;
+
+	@Autowired
+	private StaffServiceImpl staffServiceImpl;
 
 	@Autowired
 	EmailController email;
@@ -160,10 +167,46 @@ public class CalendarServicesImpl implements CalendarServices {
 			groupInDb.setModifiedBy(group.getModifiedBy());
 			groupInDb.setModifiedDate(group.getModifiedDate());
 			groupRepository.save(groupInDb);
+			return groupInDb;
 		}
-		return group;
+		return null;
 	}
 
+	@Override
+	public List<ParticipantDto> getParticipants(String username) {
+		List<ParticipantDto> dtoList = new ArrayList<>();
+		ParticipantDto employeeParticipants = getEmployeeList();
+		dtoList.add(employeeParticipants);
+		ParticipantDto groupParticipants = getGroupsList(username);
+		dtoList.add(groupParticipants);
+		ParticipantDto studentParticipants = getStudentList();
+		dtoList.add(studentParticipants);
+		return dtoList;
+	}
+
+	public ParticipantDto getStudentList() {
+		ParticipantDto studentParticipants = new ParticipantDto();
+		List<Object> studentList = studentServiceImpl.findDetailsForGroup();
+		studentParticipants.setParticipant(studentList);
+		studentParticipants.setParticipantType("Student");
+		return studentParticipants;
+	}
+
+	public ParticipantDto getGroupsList(String username) {
+		ParticipantDto groupParticipants = new ParticipantDto();
+		List<Object> groupNames = groupRepository.findAllGroupNameByCreatedBy(username);
+		groupParticipants.setParticipant(groupNames);
+		groupParticipants.setParticipantType("Group");
+		return groupParticipants;
+	}
+
+	public ParticipantDto getEmployeeList() {
+		ParticipantDto employeeParticipants = new ParticipantDto();
+		List<Object> employeeList = staffServiceImpl.getAllEmployeeNamesAndUserId();
+		employeeParticipants.setParticipant(employeeList);
+		employeeParticipants.setParticipantType("Faculty");
+		return employeeParticipants;
+	}
 
 	@Override
 	public List<Event> getMyEvents(String participantId) {

@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.user.dtos.EventDto;
+import sgsits.cse.dis.user.dtos.ParticipantDto;
 import sgsits.cse.dis.user.exception.EventDoesNotExistException;
 import sgsits.cse.dis.user.model.Event;
 import sgsits.cse.dis.user.model.Group;
@@ -31,4 +32,6 @@ public interface CalendarServices {
 	List<Group> getMyGroups(String username);
 	void deleteGroup(String groupId);
 	Group updateGroup(String groupId,Group group);
+	List<ParticipantDto> getParticipants(String username);
+
 }

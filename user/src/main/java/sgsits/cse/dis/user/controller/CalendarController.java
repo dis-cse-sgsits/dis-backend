@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.user.dtos.EventDto;
+import sgsits.cse.dis.user.dtos.ParticipantDto;
 import sgsits.cse.dis.user.exception.EventDoesNotExistException;
 import sgsits.cse.dis.user.model.Event;
 import sgsits.cse.dis.user.model.Group;
@@ -84,13 +85,13 @@ public class CalendarController {
 	}
 
 	@ApiOperation(value="Get all my groups", response= Group.class, httpMethod = "GET", produces="application/json")
-	@PostMapping(path = "/getMyGroup", produces = "application/json")
+	@GetMapping(path = "/getMyGroup", produces = "application/json")
 	public List<Group> getMyGroup(@RequestParam(value="username") String userName){
 		return calenderServiceImpl.getMyGroups(userName);
 	}
 
 	@ApiOperation(value="Delete group", response= Group.class, httpMethod = "DELETE", produces="application/json")
-	@PostMapping(path = "/deleteGroup", produces = "application/json")
+	@DeleteMapping(path = "/deleteGroup", produces = "application/json")
 	public void deleteGroup(@RequestParam(value="groupId") String groupId){
 		calenderServiceImpl.deleteGroup(groupId);
 	}
@@ -99,6 +100,12 @@ public class CalendarController {
 	@PostMapping(path = "/updateGroup", produces = "application/json")
 	public Group updateGroup(@RequestParam(value="groupId") String groupId,@RequestBody Group group){
 		return calenderServiceImpl.updateGroup(groupId,group);
+	}
+
+	@ApiOperation(value="Retrieving all users ", response= Group.class, httpMethod = "GET", produces="application/json")
+	@GetMapping(path = "/getAllUsers", produces = "application/json")
+	public List<ParticipantDto> getAllUsers(@RequestParam(value="username") String username){
+		return calenderServiceImpl.getParticipants(username);
 	}
 
 }

@@ -17,6 +17,6 @@ public interface StudentRepository extends JpaRepository<StudentProfile, Long>{
 	boolean existsByEnrollmentIdAndMobileNoAndDob(String username, long l, Date dob);
 	Optional<StudentProfile> findByEnrollmentIdAndMobileNoAndDob(String username, long mobileNo, Date dob);
 	Optional<StudentProfile> findByMobileNo(long mobileNo);
-	@Query(value = "SELECT student_profile.enrollment_id,student_profile.user_id,student_profile.full_name,student_profile.course_id from student_profile", nativeQuery = true)
-	List<Object> findEnrollmentIdAndFullNameAndUserIdAndCourseId();
+	@Query(value = "SELECT student_profile.enrollment_id,student_profile.full_name,student_profile.course_id from student_profile", nativeQuery = true)
+	List<Object> findEnrollmentIdAndFullNameAndCourseId();
 }

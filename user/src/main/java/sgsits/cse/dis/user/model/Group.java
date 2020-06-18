@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "user_groups")
 public class Group extends AuditInformation implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -22,7 +22,7 @@ public class Group extends AuditInformation implements Serializable {
     @Column(name="group_name")
     private String groupName;
 
-    @OneToMany(targetEntity = GroupParticipant.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = GroupParticipant.class, cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "group_id", referencedColumnName = "group_id")
     private Set<GroupParticipant> participants;
 

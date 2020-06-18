@@ -57,6 +57,30 @@ public class CalendarServicesImpl implements CalendarServices {
 	}
 
 	@Override
+	public List<Event> getMyEvents(String participantId) {
+		List<Event> eventList = getEventsByParticipantId(participantId);
+		List<Group> groupList = getMyGroups(participantId);
+		List<String> groupIds = new ArrayList<>();
+		for(Group group : groupList){
+			groupIds.add(group.getGroupId());
+		}
+		for(String groupId : groupIds){
+			List<Event>	eventListForGroups = getEventsByParticipantId(groupId);
+			eventList.addAll(eventListForGroups);
+		}
+		return eventList;
+	}
+
+	public List<Event> getEventsByParticipantId(String participantId) {
+		List<Event> eventList = new ArrayList<Event>();
+		List<Event> eventParticipantsList = eventRepository.findAllByParticipants_ParticipantId(participantId);
+		for (Event eventParticipants : eventParticipantsList) {
+			eventList.add(getEvent(eventParticipants.getEventId()));
+		}
+		return eventList;
+	}
+
+	@Override
 	public Event addEvent(EventDto event, MultipartFile[] files) throws IOException, MessagingException, SQLException {
 		Event conv_event = convertDtoToEventModel(event, files);
 		eventRepository.save(conv_event);
@@ -155,7 +179,7 @@ public class CalendarServicesImpl implements CalendarServices {
 	@Transactional
 	public void deleteGroup(String groupId) {
 		if(!groupId.isEmpty())
-			groupRepository.removeByGroupId(groupId);
+			groupRepository.deleteById(groupId);
 	}
 
 	@Override
@@ -173,12 +197,22 @@ public class CalendarServicesImpl implements CalendarServices {
 	}
 
 	@Override
-	public List<ParticipantDto> getParticipants(String username) {
+	public List<ParticipantDto> getParticipantsForEvent(String username) {
 		List<ParticipantDto> dtoList = new ArrayList<>();
 		ParticipantDto employeeParticipants = getEmployeeList();
 		dtoList.add(employeeParticipants);
 		ParticipantDto groupParticipants = getGroupsList(username);
 		dtoList.add(groupParticipants);
+		ParticipantDto studentParticipants = getStudentList();
+		dtoList.add(studentParticipants);
+		return dtoList;
+	}
+
+	@Override
+	public List<ParticipantDto> getParticipantsForGroup() {
+		List<ParticipantDto> dtoList = new ArrayList<>();
+		ParticipantDto employeeParticipants = getEmployeeList();
+		dtoList.add(employeeParticipants);
 		ParticipantDto studentParticipants = getStudentList();
 		dtoList.add(studentParticipants);
 		return dtoList;
@@ -204,19 +238,11 @@ public class CalendarServicesImpl implements CalendarServices {
 		ParticipantDto employeeParticipants = new ParticipantDto();
 		List<Object> employeeList = staffServiceImpl.getAllEmployeeNamesAndUserId();
 		employeeParticipants.setParticipant(employeeList);
-		employeeParticipants.setParticipantType("Faculty");
+		employeeParticipants.setParticipantType("Faculty and Staff");
 		return employeeParticipants;
 	}
 
-	@Override
-	public List<Event> getMyEvents(String participantId) {
-		List<Event> eventList = new ArrayList<Event>();
-		List<Event> eventParticipantsList = eventRepository.findAllByParticipants_ParticipantId(participantId);
-		for (Event eventParticipants : eventParticipantsList) {
-			eventList.add(getEvent(eventParticipants.getEventId()));
-		}
-		return eventList;
-	}
+
 
 	private void sendMeetingInvites(ArrayList<String> username_list, String mail_type, Event event) throws UnknownHostException, MessagingException, SQLException {
 		String type;

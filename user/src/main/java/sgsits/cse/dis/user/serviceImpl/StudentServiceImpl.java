@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Object> findDetailsForGroup() {
-        return studentRepository.findEnrollmentIdAndFullNameAndUserIdAndCourseId();
+        return studentRepository.findEnrollmentIdAndFullNameAndCourseId();
     }
 
 

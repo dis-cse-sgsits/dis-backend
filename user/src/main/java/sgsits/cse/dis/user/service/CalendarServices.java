@@ -32,6 +32,6 @@ public interface CalendarServices {
 	List<Group> getMyGroups(String username);
 	void deleteGroup(String groupId);
 	Group updateGroup(String groupId,Group group);
-	List<ParticipantDto> getParticipants(String username);
-
+	List<ParticipantDto> getParticipantsForEvent(String username);
+	List<ParticipantDto> getParticipantsForGroup();
 }

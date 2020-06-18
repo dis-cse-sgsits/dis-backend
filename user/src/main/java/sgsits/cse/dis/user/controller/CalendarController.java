@@ -105,7 +105,13 @@ public class CalendarController {
 	@ApiOperation(value="Retrieving all users ", response= Group.class, httpMethod = "GET", produces="application/json")
 	@GetMapping(path = "/getAllUsers", produces = "application/json")
 	public List<ParticipantDto> getAllUsers(@RequestParam(value="username") String username){
-		return calenderServiceImpl.getParticipants(username);
+		return calenderServiceImpl.getParticipantsForEvent(username);
+	}
+
+	@ApiOperation(value="Retrieving users for groups", response= Group.class, httpMethod = "GET", produces="application/json")
+	@GetMapping(path = "/getAllUsersForGroup", produces = "application/json")
+	public List<ParticipantDto> getAllUsersForGroup(){
+		return calenderServiceImpl.getParticipantsForGroup();
 	}
 
 }

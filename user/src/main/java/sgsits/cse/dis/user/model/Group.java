@@ -22,7 +22,7 @@ public class Group extends AuditInformation implements Serializable {
     @Column(name="group_name")
     private String groupName;
 
-    @OneToMany(targetEntity = GroupParticipant.class, cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(targetEntity = GroupParticipant.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id", referencedColumnName = "group_id")
     private Set<GroupParticipant> participants;
 

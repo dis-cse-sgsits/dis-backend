@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.rmi.UnknownHostException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.user.controller.EmailController;
-import sgsits.cse.dis.user.controller.UserNotificationController;
 import sgsits.cse.dis.user.dtos.EventDto;
 import sgsits.cse.dis.user.dtos.ParticipantDto;
 import sgsits.cse.dis.user.exception.EventDoesNotExistException;
@@ -21,6 +18,7 @@ import sgsits.cse.dis.user.service.CalendarServices;
 import sgsits.cse.dis.user.service.NotificationService;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 @Service
@@ -28,6 +26,9 @@ public class CalendarServicesImpl implements CalendarServices {
 
 	@Autowired
 	StudentServiceImpl studentServiceImpl;
+
+	@Autowired
+	UserRepository userRepository;
 
 	@Autowired
 	private EventRepository eventRepository;
@@ -88,8 +89,9 @@ public class CalendarServicesImpl implements CalendarServices {
 		for(EventParticipant participant: event.getParticipants()) {
 			mailing_list.add(participant.getParticipantId());
 		}
-		sendMeetingInvites(mailing_list, "add",conv_event);
-		generateNotification(conv_event, "add", mailing_list);
+		List<String> finalMailingList= getUsersOfGroup(mailing_list);
+		sendMeetingInvites(finalMailingList, "add",conv_event);
+		generateNotification(conv_event, "add", finalMailingList);
 		return conv_event;
 	}
 
@@ -106,21 +108,23 @@ public class CalendarServicesImpl implements CalendarServices {
 			}
 		Event conv_event = convertDtoToEventModel(event, files);
 		Event old_event = eventRepository.findByEventId(eventId);
-		Set<String> old_participants = new HashSet<>();
-		Set<String> new_participants = new HashSet<>();
+		List<String> old_participants = new ArrayList<>();
+		List<String> new_participants = new ArrayList<>();
 
 		for (EventParticipant eventParticipant : old_event.getParticipants())
 			old_participants.add(eventParticipant.getParticipantId());
+		List<String> finalOldParticipantList = getUsersOfGroup(old_participants);
 
 		for (EventParticipant eventParticipant : event.getParticipants())
 			new_participants.add(eventParticipant.getParticipantId());
+		List<String> finalNewParticipantList = getUsersOfGroup(new_participants);
 
-		Set<String> retainedParticipants = new HashSet<>(old_participants);
-		retainedParticipants.retainAll(new_participants);
-		Set<String> removedParticipants = new HashSet<>(old_participants);
-		removedParticipants.removeAll(new_participants);
-		Set<String> newParticipants = new HashSet<>(new_participants);
-		newParticipants.removeAll(old_participants);
+		Set<String> retainedParticipants = new HashSet<>(finalOldParticipantList);
+		retainedParticipants.retainAll(finalNewParticipantList);
+		Set<String> removedParticipants = new HashSet<>(finalOldParticipantList);
+		removedParticipants.removeAll(finalNewParticipantList);
+		Set<String> newParticipants = new HashSet<>(finalNewParticipantList);
+		newParticipants.removeAll(finalOldParticipantList);
 		eventRepository.deleteById(eventId);
 		eventRepository.save(conv_event);
 
@@ -153,9 +157,10 @@ public class CalendarServicesImpl implements CalendarServices {
 		for(EventParticipant participant: removedParticipants) {
 			mailing_list.add(participant.getParticipantId());
 		}
+		List<String> finalMailingList = getUsersOfGroup(mailing_list);
 		event.setAttachments(null);
-		sendMeetingInvites(mailing_list, "cancel", event);
-		generateNotification(event, "cancel", mailing_list);
+		sendMeetingInvites(finalMailingList, "cancel", event);
+		generateNotification(event, "cancel", finalMailingList);
 	}
 
 	@Override
@@ -185,13 +190,9 @@ public class CalendarServicesImpl implements CalendarServices {
 	@Override
 	public Group updateGroup(String groupId, Group group) {
 		if(groupId!=null){
-			Group groupInDb = groupRepository.findByGroupId(groupId);
-			groupInDb.setGroupName(group.getGroupName());
-			groupInDb.setParticipants(group.getParticipants());
-			groupInDb.setModifiedBy(group.getModifiedBy());
-			groupInDb.setModifiedDate(group.getModifiedDate());
-			groupRepository.save(groupInDb);
-			return groupInDb;
+			groupRepository.deleteById(groupId);
+			groupRepository.save(group);
+			return group;
 		}
 		return null;
 	}
@@ -216,6 +217,22 @@ public class CalendarServicesImpl implements CalendarServices {
 		ParticipantDto studentParticipants = getStudentList();
 		dtoList.add(studentParticipants);
 		return dtoList;
+	}
+
+	public List<String> getUsersOfGroup(List<String> mailingList){
+		List<String> groupParticipantList = new ArrayList<>();
+		List<String> removeParticipant = new ArrayList<>();
+		for(String participant : mailingList){
+			if(!(userRepository.existsByUsername(participant))){
+				Group group = groupRepository.findByGroupId(participant);
+				Set<GroupParticipant> groupParticipants = group.getParticipants();
+				groupParticipants.forEach(groupParticipant->groupParticipantList.add(groupParticipant.getParticipantId()));
+                removeParticipant.add(participant);
+			}
+		}
+		mailingList.removeAll(removeParticipant);
+		mailingList.addAll(groupParticipantList);
+		return mailingList;
 	}
 
 	public ParticipantDto getStudentList() {
@@ -244,14 +261,13 @@ public class CalendarServicesImpl implements CalendarServices {
 
 
 
-	private void sendMeetingInvites(ArrayList<String> username_list, String mail_type, Event event) throws UnknownHostException, MessagingException, SQLException {
+	private void sendMeetingInvites(List<String> username_list, String mail_type, Event event) throws UnknownHostException, MessagingException, SQLException {
 		String type;
 		ArrayList<String> mailing_list = new ArrayList<String>();
-		List<Object[]> staffData = staffBasicProfileRepository.findAllUserIdAndEmails();
-		for(Object[] staff_member: staffData) {
-			if(username_list.contains(staff_member[0])) {
-				mailing_list.add((String) staff_member[1]);
-			}
+		for(String username : username_list){
+			final User user = userRepository.findByUsername(username)
+					.orElseThrow(EntityNotFoundException::new);
+			mailing_list.add(user.getEmail());
 		}
 		String startLine  = "You have been invited to the following event.\n\n";
 		if(mail_type.equals("add")) {

@@ -30,6 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username the username
      * @return the optional
      */
+
     Optional<User> findByUsername(final String username);
 
     /**
@@ -71,6 +72,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return the optional
      */
     Optional<User> findByMobileNo(final long mobileNo);
+
 
     List<User> findAllByEnabledAndUserTypeNot(boolean enabled, String userType);
 

@@ -33,7 +33,7 @@ public class UserServicesImpl implements UserServices{
 	private StudentRepository studentRepository;
 	
 	@Override
-	public boolean existsByUsername(String username) throws NotFoundException {
+	public boolean existsByUsername(String username){
 			if(userRepository.existsByUsername(username))
 				return true;
 			else

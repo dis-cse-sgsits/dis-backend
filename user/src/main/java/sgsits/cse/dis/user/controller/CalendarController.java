@@ -93,7 +93,7 @@ public class CalendarController {
 
 	@ApiOperation(value="Delete group", response= Group.class, httpMethod = "DELETE", produces="application/json")
 	@DeleteMapping(path = "/deleteGroup", produces = "application/json")
-	public void deleteGroup(@RequestParam(value="groupId") String groupId){
+	public void deleteGroup(@RequestParam(value="groupId") List<String> groupId){
 		calenderServiceImpl.deleteGroup(groupId);
 	}
 

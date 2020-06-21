@@ -182,13 +182,16 @@ public class CalendarServicesImpl implements CalendarServices {
 
 	@Override
 	@Transactional
-	public void deleteGroup(String groupId) {
-		if(!groupId.isEmpty())
-			groupRepository.deleteById(groupId);
+	public void deleteGroup(List<String> groupIds) throws IllegalArgumentException{
+		for(String groupId : groupIds){
+		    if(groupId!=null) {
+                groupRepository.deleteById(groupId);
+            }
+        }
 	}
 
 	@Override
-	public Group updateGroup(String groupId, Group group) {
+	public Group updateGroup(String groupId, Group group) throws IllegalArgumentException{
 		if(groupId!=null){
 			groupRepository.deleteById(groupId);
 			groupRepository.save(group);

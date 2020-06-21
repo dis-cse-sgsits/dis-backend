@@ -30,7 +30,7 @@ public interface CalendarServices {
 	List<Holiday> getPublicHolidays();
 	Group addGroup(Group group);
 	List<Group> getMyGroups(String username);
-	void deleteGroup(String groupId);
+	void deleteGroup(List<String> groupId);
 	Group updateGroup(String groupId,Group group);
 	List<ParticipantDto> getParticipantsForEvent(String username);
 	List<ParticipantDto> getParticipantsForGroup();

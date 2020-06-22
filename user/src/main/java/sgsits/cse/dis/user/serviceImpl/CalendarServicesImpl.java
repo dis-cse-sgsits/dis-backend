@@ -248,7 +248,7 @@ public class CalendarServicesImpl implements CalendarServices {
 
 	public ParticipantDto getGroupsList(String username) {
 		ParticipantDto groupParticipants = new ParticipantDto();
-		List<Object> groupNames = groupRepository.findAllGroupNameByCreatedBy(username);
+		List<Object> groupNames = groupRepository.findAllGroupNameGroupIdByCreatedBy(username);
 		groupParticipants.setParticipant(groupNames);
 		groupParticipants.setParticipantType("Group");
 		return groupParticipants;
@@ -258,7 +258,7 @@ public class CalendarServicesImpl implements CalendarServices {
 		ParticipantDto employeeParticipants = new ParticipantDto();
 		List<Object> employeeList = staffServiceImpl.getAllEmployeeNamesAndUserId();
 		employeeParticipants.setParticipant(employeeList);
-		employeeParticipants.setParticipantType("Faculty and Staff");
+		employeeParticipants.setParticipantType("Academic Personnel");
 		return employeeParticipants;
 	}
 

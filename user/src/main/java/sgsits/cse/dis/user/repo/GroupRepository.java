@@ -9,6 +9,6 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<Group, String> {
     List<Group> findByCreatedBy(String username);
     Group findByGroupId(String groupId);
-    @Query(value = "SELECT user_groups.group_name FROM user_groups where user_groups.created_by = ?1 ", nativeQuery = true)
-    List<Object> findAllGroupNameByCreatedBy(String username);
+    @Query(value = "SELECT user_groups.group_name,user_groups.group_id FROM user_groups where user_groups.created_by = ?1 ", nativeQuery = true)
+    List<Object> findAllGroupNameGroupIdByCreatedBy(String username);
 }

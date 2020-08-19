@@ -2,6 +2,7 @@ package sgsits.cse.dis.user.model;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -11,6 +12,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "notification_participant")
 public class NotificationParticipant extends AuditInformation {
 
+  /**
+   * The Id.
+   */
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(
@@ -19,14 +23,39 @@ public class NotificationParticipant extends AuditInformation {
   )
   @Column(name = "id", nullable = false, unique = true)
   private String id;
+  /**
+   * The Notification.
+   */
   @ManyToOne
   private Notification notification;
+  /**
+   * The User.
+   */
   @ManyToOne
   private User user;
-  @Column(name = "read_status")
-  private Boolean readStatus;
-
   /**
+   * The Read status.
+   */
+  @Column(name = "read_status", columnDefinition = "boolean default false",nullable = false)
+  private Boolean readStatus;
+  /**
+   * The Comment.
+   */
+  @Column(name = "comment")
+  private String comment;
+  /**
+   * The Is active.
+   */
+  @Column(name = "is_active", columnDefinition = "boolean default true",nullable = false)
+  private Boolean isActive = true;
+  /**
+   * The Is favourite.
+   */
+  @Column(name = "is_favourite",columnDefinition = "boolean default false", nullable = false)
+  private Boolean isFavourite = false;
+
+
+/**
    * Gets id.
    *
    * @return the id
@@ -97,4 +126,59 @@ public class NotificationParticipant extends AuditInformation {
   public void setReadStatus(final Boolean readStatus) {
     this.readStatus = readStatus;
   }
+
+  /**
+   * Gets comment.
+   *
+   * @return the comment
+   */
+  public String getComment() {
+    return comment;
+  }
+
+  /**
+   * Sets comment.
+   *
+   * @param comment the comment
+   */
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
+  /**
+   * Gets active.
+   *
+   * @return the active
+   */
+  public Boolean getActive() {
+    return isActive;
+  }
+
+  /**
+   * Sets active.
+   *
+   * @param active the active
+   */
+  public void setActive(Boolean active) {
+    isActive = active;
+  }
+  
+  /**
+   * Gets favourite.
+   *
+   * @return the favourite
+   */
+  public Boolean getFavourite() {
+		return isFavourite;
+	}
+
+  /**
+   * Sets favourite.
+   *
+   * @param favourite the favourite
+   */
+	public void setFavourite(Boolean favourite) {
+		this.isFavourite = favourite;
+	}
+
 }

@@ -39,11 +39,6 @@ public class Notification extends AuditInformation {
    */
   @Column(name = "link")
   private String link;
-  /**
-   * The Is active.
-   */
-  @Column(name = "is_active")
-  private Boolean isActive;
 
   /**
    * Gets id.
@@ -97,24 +92,6 @@ public class Notification extends AuditInformation {
    */
   public void setDescription(final String description) {
     this.description = description;
-  }
-
-  /**
-   * Gets active.
-   *
-   * @return the active
-   */
-  public Boolean getActive() {
-    return isActive;
-  }
-
-  /**
-   * Sets active.
-   *
-   * @param active the active
-   */
-  public void setActive(final Boolean active) {
-    isActive = active;
   }
 
   /**

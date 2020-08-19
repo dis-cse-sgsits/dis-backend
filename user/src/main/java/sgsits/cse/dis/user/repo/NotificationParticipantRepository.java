@@ -22,8 +22,8 @@ public interface NotificationParticipantRepository extends JpaRepository<Notific
      * @param user the user
      * @return the list
      */
-    List<NotificationParticipant> findAllByUser(User user);
-
+    List<NotificationParticipant> findAllByUserAndIsActive(final User user, final Boolean status);
+    
     @Transactional
     @Modifying
     @Query("update NotificationParticipant n set n.readStatus = :readStatus where n.notification.id = :notificationId and n.user.id = :userId")
@@ -33,5 +33,15 @@ public interface NotificationParticipantRepository extends JpaRepository<Notific
     @Modifying
     @Query("update NotificationParticipant n set n.readStatus = :readStatus where n.user.id = :userId")
     void modifyReadStatusOfAll(@Param("userId") final String userId, @Param("readStatus") final boolean status);
+    
+    @Transactional
+    @Modifying
+    @Query("update NotificationParticipant n set n.isActive = :isActive where n.notification.id = :notificationId and n.user.id = :userId")
+    void modifyIsActive(@Param("notificationId") final String notificationId, @Param("userId") final String userId, @Param("isActive") final boolean status);
+  
+    @Transactional
+    @Modifying
+    @Query("update NotificationParticipant n set n.isFavourite = case n.isFavourite WHEN TRUE THEN FALSE ELSE TRUE END where n.notification.id = :notificationId and n.user.id = :userId")
+    void modifyFavouriteStatus(@Param("notificationId") final String notificationId, @Param("userId") final String userId);
     
 }

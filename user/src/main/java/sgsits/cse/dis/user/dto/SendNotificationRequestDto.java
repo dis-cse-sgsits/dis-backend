@@ -8,6 +8,7 @@ import java.util.List;
  * The type Send notification request dto.
  */
 public class SendNotificationRequestDto {
+
     /**
      * The Notification.
      */
@@ -16,11 +17,17 @@ public class SendNotificationRequestDto {
      * The Participants.
      */
     private List<String> usernameList;
-
     /**
      * The Type list.
      */
     private List<String> typeList;
+
+
+    /**
+     * Instantiates a new Send notification request dto.
+     */
+    public SendNotificationRequestDto() {
+    }
 
     /**
      * Instantiates a new Send notification request dto.

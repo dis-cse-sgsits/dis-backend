@@ -40,6 +40,7 @@ public interface NotificationService {
      * Send notification to all except.
      *
      * @param notification the notification
+     * @param typeList     the type list
      * @param usernameList the username list
      */
     void sendNotificationByTypeExceptGivenUsers(final Notification notification, final List<String> typeList, final List<String> usernameList);
@@ -59,11 +60,38 @@ public interface NotificationService {
      * @param username       the username
      */
     void markAsRead(final String notificationId, final String username);
-    
+
     /**
      * Mark all as read.
      *
      * @param username the username
      */
     void markAllAsRead(final String username);
+
+    /**
+     * Forward notification.
+     *
+     * @param notificationId the notification id
+     * @param usernameList   the username list
+     * @param comment        the comment
+     */
+    void forwardNotification(final String notificationId, final List<String> usernameList, final String comment);
+    
+    /**
+     * Delete notification.
+     * 
+     * @param notificationId
+     * @param username
+     */
+    void deleteNotification(final String notificationId, final String username);
+    
+    /**
+     * Mark as favourite.
+     * 
+     * @param notificationId
+     * @param username
+     */
+    void markAsFavourite(final String notificationId, final String username);
+    
+    
 }

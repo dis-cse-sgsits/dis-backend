@@ -31,6 +31,16 @@ public class NotificationDto {
      * The Date.
      */
     private Date date;
+    /**
+     * The Comment.
+     */
+    private String comment;
+    
+    /**
+     * The Is favourite
+     */
+    private Boolean isFavourite;
+    
 
     /**
      * Instantiates a new Notification dto.
@@ -46,15 +56,21 @@ public class NotificationDto {
      * @param description the description
      * @param link        the link
      * @param isRead      the is read
-     * @param date		  the date
+     * @param date        the date
+     * @param comment     the comment
+     * @param isFavourite the is favourite
      */
-    public NotificationDto(final String id, final String heading, final String description, final String link, Boolean isRead,final Date date) {
+    public NotificationDto(final String id, final String heading, final String description,
+                           final String link, Boolean isRead, final Date date, final String comment,
+                           Boolean isFavourite) {
         this.id = id;
         this.heading = heading;
         this.description = description;
         this.link = link;
         this.isRead = isRead;
         this.date = date;
+        this.comment = comment;
+        this.isFavourite = isFavourite;
     }
 
     /**
@@ -62,20 +78,20 @@ public class NotificationDto {
      *
      * @return the date
      */
-	public Date getDate() {
+    public Date getDate() {
 		return date;
     }
-    
+
     /**
      * Sets date.
      *
      * @param date the date
      */
-	public void setDate(Date date) {
+    public void setDate(Date date) {
 		this.date = date;
 	}
 
-	/**
+    /**
      * Gets id.
      *
      * @return the id
@@ -164,4 +180,30 @@ public class NotificationDto {
     public void setRead(Boolean read) {
         isRead = read;
     }
+
+    /**
+     * Gets comment.
+     *
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * Sets comment.
+     *
+     * @param comment the comment
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+	public Boolean getIsFavourite() {
+		return isFavourite;
+	}
+
+	public void setIsFavourite(Boolean favourite) {
+		this.isFavourite = favourite;
+	}
 }

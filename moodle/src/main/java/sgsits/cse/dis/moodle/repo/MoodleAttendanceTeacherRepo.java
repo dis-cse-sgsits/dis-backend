@@ -17,14 +17,17 @@ public interface MoodleAttendanceTeacherRepo extends JpaRepository<MoodleAttenda
 	public List<MoodleAttendanceTeacher> findBySubjectid(Long subjectid);
 	public List<MoodleAttendanceTeacher> findAllById(Long id);
 	
+	@Query(value="select id  from  mdl_attendance_teacher  where subjectid =:subjectid ",nativeQuery=true)
+	public List<Long> getBySubject(@Param("subjectid")Long subjectid);
+	
 	@Query(value="select subjectid  from  mdl_attendance_teacher group by subjectid,takenby",nativeQuery=true)
 	List<Long> getBySubjectid();
 	
 	@Query(value="select sum(slot) as slot from  mdl_attendance_teacher where subjectid in :subjectid and id in :tableid group by subjectid",nativeQuery=true)
 	public List<Long> getAllSubjectWiseSlot(@Param("subjectid") List<Long> subjectid,@Param("tableid") List<Long> tableid);
 	
-	@Query(value="select id from  mdl_attendance_teacher where takenby= :userid",nativeQuery=true)
-	public List<Long> getById(@Param("userid") Long userid);
+	@Query(value="select id from  mdl_attendance_teacher where takenby= :userid and subjectid=:courseid",nativeQuery=true)
+	public List<Long> getById(@Param("userid") Long userid,@Param("courseid")Long courseid);
 	@Query(value="SELECT sum(slot) from mdl_attendance_teacher where subjectid=?1 group by subjectid",nativeQuery = true)
 	public Long getTotalSlot(Long subjectid);
 	

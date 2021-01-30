@@ -17,5 +17,5 @@ public interface  MoodleCourseRepo extends JpaRepository<MoodleCourse, Long> {
 	 public List<MoodleCourse> findAll();
 	
 	 public List<MoodleCourse> findAllById(Long Id);
-	 public List<MoodleCourse>  findAllByShortname(String shortname);
+	 public MoodleCourse  findAllByShortname(String shortname);
 }

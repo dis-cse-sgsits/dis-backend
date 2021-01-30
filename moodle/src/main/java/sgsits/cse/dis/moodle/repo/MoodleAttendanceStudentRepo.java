@@ -17,7 +17,7 @@ public interface MoodleAttendanceStudentRepo extends JpaRepository<MoodleAttenda
 	
 	@Query(value="select tableid from mdl_attendance_student where studentid=?1 ",nativeQuery=true)
 	public List<Long> getByStudentid(Long studentid);
-	
+	List<MoodleAttendanceStudent> findAllByTableid(Long tableid);
      List<MoodleAttendanceStudent> findByTableid(Long tableid);
      @Query(value="select * from mdl_attendance_student where tableid in :tableid ",nativeQuery=true)
      List<MoodleAttendanceStudent> getByTableid(@Param("tableid")List<Long> tableid);
